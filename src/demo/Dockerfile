@@ -6,4 +6,4 @@ RUN mvn clean package -DskipTests
 FROM mcr.microsoft.com/openjdk/jdk:17-distroless
 COPY --from=build /app/target/*.jar /app/app.jar
 WORKDIR /app
-CMD "java" "-jar" "app.jar
+CMD ["java", "-jar", "app.jar]
