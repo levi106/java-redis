@@ -19,6 +19,7 @@ public class App
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         final String HOST_NAME = System.getenv("HOST_NAME");
         final char[] PASSWORD = System.getenv("PASSWORD").toCharArray();
+        final String timeout = System.getenv("TIMEOUT");
         final int SSL_PORT = 6380;
         final RedisURI redisUri = RedisURI.Builder.redis(HOST_NAME, SSL_PORT).
             withPassword(PASSWORD).
@@ -26,7 +27,10 @@ public class App
             withPort(SSL_PORT).
             build();
         RedisClient client = RedisClient.create(redisUri);
-        client.setDefaultTimeout(Duration.ofSeconds(60*20));
+        if (timeout != null) {
+            System.out.printf("Timeout: %s\n", timeout);
+            client.setDefaultTimeout(Duration.ofSeconds(Integer.parseInt(timeout)));
+        }
         StatefulRedisConnection<String, String> connection = client.connect();
         while (true) {
             try {
